@@ -132,7 +132,10 @@ const contribAdsPlugin = function(options) {
 
   // Remove ad-loading class when ad plays or when content plays (in case there was no ad)
   // If you remove this class too soon you can get a flash of content!
-  player.on(['ads-ad-started', 'playing'], () => {
+  // Ideally the class should be removed on 'playing' events if no ad plays, but
+  // there is a bug where 'playing' events are not redispatched to the player
+  // following contentupdates in some implementations, so for now we remove it on 'adtimeout'
+  player.on(['ads-ad-started', 'adtimeout'], () => {
     player.removeClass('vjs-ad-loading');
   });
 
